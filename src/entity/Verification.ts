@@ -10,7 +10,7 @@ import {
 export type VerificationTarget = 'PHONE' | 'EMAIL';
 
 @Entity('verifications', {
-  synchronize: true
+  synchronize: false
 })
 class Verification {
   @PrimaryGeneratedColumn('uuid')

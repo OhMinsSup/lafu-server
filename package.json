@@ -6,7 +6,8 @@
   "scripts": {
     "dev:sync": "npm run typeorm schema:sync",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "dev": "set NODE_ENV=development && ts-node-dev --respawn ./src/server.ts"
+    "dev": "cross-env NODE_ENV=development && ts-node-dev --respawn ./src/server.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -42,6 +43,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
+    "cross-env": "^6.0.3",
     "dataloader": "^1.4.0",
     "dotenv": "^8.1.0",
     "gql-merge": "0.0.6",

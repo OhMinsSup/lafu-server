@@ -10,7 +10,7 @@ import {
 import User from './User';
 
 @Entity('auth_tokens', {
-  synchronize: true
+  synchronize: false
 })
 class AuthToken {
   @PrimaryGeneratedColumn('uuid')
