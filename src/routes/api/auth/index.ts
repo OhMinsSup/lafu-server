@@ -8,7 +8,7 @@ import { createAuthEmail } from '../../../template/emailTemplates';
 import { sendMail } from '../../../lib/sendEmail';
 import { BAD_REQUEST, NOT_FOUND, CODE_EXPIRED } from '../../../config/exection';
 import UserProfile from '../../../entity/UserProfile';
-import { generateToken, setTokenCookie } from '../../../lib/tokens';
+import { generateToken, setTokenCookie, setClearTokenCookie } from '../../../lib/tokens';
 
 const auth = Router();
 
@@ -155,6 +155,23 @@ auth.get('/code/:code', async (req, res) => {
   } catch (e) {
     throw e;
   }
+});
+
+auth.get('/check', async (req, res) => {
+  return res.status(200).json({
+    payload: {
+      user_id: res.locals.user_id
+    }
+  });
+});
+
+auth.post('/logout', async (req, res) => {
+  setClearTokenCookie(res);
+  return res.status(200).json({
+    payload: {
+      
+    }
+  });
 });
 
 export default auth;

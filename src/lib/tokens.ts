@@ -59,8 +59,12 @@ export function setTokenCookie(
 }
 
 export function setClearTokenCookie(res: Response) {
-  res.clearCookie('access_token');
-  res.clearCookie('refresh_token');
+  res.clearCookie('access_token', {
+    domain: process.env.NODE_ENV === 'development' ? undefined : '.lafu.io'
+  });
+  res.clearCookie('refresh_token', {
+    domain: process.env.NODE_ENV === 'development' ? undefined : '.lafu.io'
+  });
 }
 
 type TokenData = {
