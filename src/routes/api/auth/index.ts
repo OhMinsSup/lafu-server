@@ -2,11 +2,13 @@ import Joi from 'joi';
 import { Router } from 'express';
 import { getRepository } from 'typeorm';
 import { generate } from 'shortid';
-import Verification from '../../../entity/Verification';
+import Verification, { VerificationTarget } from '../../../entity/Verification';
 import User from '../../../entity/User';
 import { createAuthEmail } from '../../../template/emailTemplates';
 import { sendMail } from '../../../lib/sendEmail';
-import { sendVerificationSMS } from '../../../lib/sendSMS';
+import { BAD_REQUEST, NOT_FOUND, CODE_EXPIRED } from '../../../config/exection';
+import UserProfile from '../../../entity/UserProfile';
+import { generateToken, setTokenCookie } from '../../../lib/tokens';
 
 const auth = Router();
 
@@ -23,9 +25,9 @@ auth.post('/sendEmail', async (req, res) => {
 
   const result = Joi.validate(req.body, schema);
   if (result.error) {
-    return res.status(400).json({
-      name: '잘못된 파라미터',
+    return res.status(BAD_REQUEST.status).json({
       payload: {
+        name: BAD_REQUEST.name,
         status: result.error.name,
         message: result.error.message
       }
@@ -55,7 +57,7 @@ auth.post('/sendEmail', async (req, res) => {
       });
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       payload: {
         registered: !!user
       }
@@ -65,48 +67,91 @@ auth.post('/sendEmail', async (req, res) => {
   }
 });
 
-auth.post('/sendPhone', async (req, res) => {
-  interface Body {
-    phone: string;
-  }
+auth.get('/code/:code', async (req, res) => {
+  const code = req.params.code;
+  const target = (req.query.target as VerificationTarget) || 'EMAIL';
 
-  const schema = Joi.object().keys({
-    phone: Joi.string().required()
-  });
-
-  const result = Joi.validate(req.body, schema);
-  if (result.error) {
-    return res.status(400).json({
-      name: '잘못된 파라미터',
+  if (!code) {
+    return res.status(BAD_REQUEST.status).json({
       payload: {
-        status: result.error.name,
-        message: result.error.message
+        name: BAD_REQUEST.name,
+        status: BAD_REQUEST.status,
+        message: 'code값이 없습니다.'
       }
     });
   }
-
-  const { phone } = req.body as Body;
 
   try {
+    const emailAuth = await getRepository(Verification).findOne({
+      code,
+      target
+    });
+
+    if (!emailAuth) {
+      return res.status(NOT_FOUND.status).json({
+        payload: {
+          name: NOT_FOUND.name,
+          status: NOT_FOUND.status,
+          message: '존재하지않는 코드값입니다.'
+        }
+      });
+    }
+
+    const diff = new Date().getTime() - new Date(emailAuth.created_at).getTime();
+    if (diff > 1000 * 60 * 60 * 24 || emailAuth.logged) {
+      return res.status(CODE_EXPIRED.status).json({
+        payload: {
+          name: CODE_EXPIRED.name,
+          status: CODE_EXPIRED.status,
+          message: '전달된 코드값이 만료 되었습니다.'
+        }
+      });
+    }
+
+    const { payload: email } = emailAuth;
     const user = await getRepository(User).findOne({
-      phoneNumber: phone
+      email
     });
 
-    const phoneAuth = new Verification();
-    phoneAuth.code = generate();
-    phoneAuth.payload = phone;
-    phoneAuth.target = 'PHONE';
-    await getRepository(Verification).save(phoneAuth);
+    if (!user) {
+      // generate register token
+      const registerToken = await generateToken(
+        {
+          email,
+          id: emailAuth.id
+        },
+        { expiresIn: '1h', subject: 'email-register' }
+      );
 
-    setImmediate(() => {
-      sendVerificationSMS(!!user, phone, phoneAuth.code);
-    });
+      return res.status(200).json({
+        payload: {
+          email,
+          register_token: registerToken
+        }
+      });
+    } else {
+      const profile = await getRepository(UserProfile).findOne({
+        fk_user_id: user.id
+      });
+      if (!profile) return;
+      const tokens = await user.generateUserToken();
+      setTokenCookie(res, tokens);
+      emailAuth.logged = true;
+      setImmediate(() => {
+        getRepository(Verification).save(emailAuth);
+      });
 
-    res.status(200).json({
-      payload: {
-        registered: !!user
-      }
-    });
+      return res.status(200).json({
+        payload: {
+          ...user,
+          profile,
+          tokens: {
+            access_token: tokens.accessToken,
+            refresh_token: tokens.refreshToken
+          }
+        }
+      });
+    }
   } catch (e) {
     throw e;
   }

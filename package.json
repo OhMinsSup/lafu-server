@@ -18,6 +18,7 @@
     "@types/dotenv": "^6.1.1",
     "@types/helmet": "0.0.44",
     "@types/joi": "^14.3.3",
+    "@types/jsonwebtoken": "^8.3.5",
     "@types/morgan": "^1.7.37",
     "@types/node": "^12.7.4",
     "@types/nodemailer": "^6.2.1",
@@ -51,13 +52,13 @@
     "graphql-yoga": "^1.18.3",
     "helmet": "^3.21.0",
     "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
     "merge-graphql-schemas": "^1.7.0",
     "morgan": "^1.9.1",
     "nodemailer": "^6.3.0",
     "pg": "^7.12.1",
     "reflect-metadata": "^0.1.13",
     "shortid": "^2.2.15",
-    "twilio": "^3.35.0",
     "typeorm": "^0.2.18",
     "webpack": "^4.39.3"
   }
