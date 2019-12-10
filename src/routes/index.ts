@@ -3,6 +3,6 @@ import auth from './api/auth';
 
 const api = Router();
 
-api.use('/v1/auth', auth);
+api.use('/api/v1/auth', auth);
 
 export default api;

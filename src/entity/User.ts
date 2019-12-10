@@ -118,7 +118,6 @@ class User {
     return { refreshToken, accessToken };
   }
 }
-}
 
 export const createUserLoader = () =>
   new DataLoader<string, User>(ids => {
