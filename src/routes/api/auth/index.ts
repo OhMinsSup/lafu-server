@@ -6,9 +6,14 @@ import Verification, { VerificationTarget } from '../../../entity/Verification';
 import User from '../../../entity/User';
 import { createAuthEmail } from '../../../template/emailTemplates';
 import { sendMail } from '../../../lib/sendEmail';
-import { BAD_REQUEST, NOT_FOUND, CODE_EXPIRED } from '../../../config/exection';
+import { BAD_REQUEST, NOT_FOUND, CODE_EXPIRED, ALREADY_EXIST } from '../../../config/exection';
 import UserProfile from '../../../entity/UserProfile';
-import { generateToken, setTokenCookie, setClearTokenCookie } from '../../../lib/tokens';
+import {
+  generateToken,
+  setTokenCookie,
+  setClearTokenCookie,
+  decodeToken
+} from '../../../lib/tokens';
 
 const auth = Router();
 
@@ -136,6 +141,7 @@ auth.get('/code/:code', async (req, res) => {
       if (!profile) return;
       const tokens = await user.generateUserToken();
       setTokenCookie(res, tokens);
+      // eslint-disable-next-line require-atomic-updates
       emailAuth.logged = true;
       setImmediate(() => {
         getRepository(Verification).save(emailAuth);
@@ -157,6 +163,120 @@ auth.get('/code/:code', async (req, res) => {
   }
 });
 
+auth.post('/register/local', async (req, res) => {
+  interface Body {
+    register_token: string;
+    form: {
+      display_name: string;
+      username: string;
+      short_bio: string;
+    };
+  }
+
+  interface RegisterToken {
+    email: string;
+    id: string;
+    sub: string;
+  }
+
+  const schema = Joi.object().keys({
+    register_token: Joi.string().required(),
+    form: Joi.object()
+      .keys({
+        display_name: Joi.string()
+          .min(1)
+          .max(45)
+          .required(),
+        username: Joi.string()
+          .regex(/^[a-z0-9-_]+$/)
+          .min(3)
+          .max(16)
+          .required(),
+        short_bio: Joi.string()
+          .allow('')
+          .max(140)
+      })
+      .required()
+  });
+
+  const result = Joi.validate(req.body, schema);
+  if (result.error) {
+    return res.status(BAD_REQUEST.status).json({
+      payload: {
+        name: BAD_REQUEST.name,
+        status: result.error.name,
+        message: result.error.message
+      }
+    });
+  }
+
+  const { register_token, form } = req.body as Body;
+
+  let decoded: RegisterToken | null = null;
+  try {
+    decoded = await decodeToken<RegisterToken>(register_token);
+    if (decoded.sub !== 'email-register') {
+      return res.status(BAD_REQUEST.status).json({
+        payload: {
+          name: BAD_REQUEST.name,
+          status: BAD_REQUEST.status,
+          message: '전달된 토큰값이 이메일 회원가입 토큰이 아닙니다.'
+        }
+      });
+    }
+  } catch (e) {
+    throw new Error(e);
+  }
+
+  const { email, id: codeId } = decoded;
+  const exists = await getRepository(User)
+    .createQueryBuilder()
+    .where('email = :email OR username = :username', { email, username: form.username })
+    .getOne();
+
+  if (exists) {
+    return res.status(200).json({
+      payload: {
+        name: ALREADY_EXIST.name,
+        status: ALREADY_EXIST.status,
+        message: '이미 존재하는 이메일또는 유저명 입니다.'
+      }
+    });
+  }
+
+  const verificationRepo = getRepository(Verification);
+  const verification = await verificationRepo.findOne(codeId);
+  if (verification) {
+    verification.logged = true;
+    await verificationRepo.save(verification);
+  }
+
+  const userRepo = getRepository(User);
+  const user = new User();
+  user.email = email;
+  user.username = form.username;
+  await userRepo.save(user);
+
+  const profile = new UserProfile();
+  profile.fk_user_id = user.id;
+  profile.display_name = form.display_name;
+  profile.short_bio = form.short_bio;
+  await getRepository(UserProfile).save(profile);
+
+  const tokens = await user.generateUserToken();
+  setTokenCookie(res, tokens);
+  return res.status(200).json({
+    payload: {
+      ...user,
+      profile,
+      tokens: {
+        access_token: tokens.accessToken,
+        refresh_token: tokens.refreshToken
+      }
+    }
+  });
+});
+
 auth.get('/check', async (req, res) => {
   return res.status(200).json({
     payload: {
@@ -167,11 +287,7 @@ auth.get('/check', async (req, res) => {
 
 auth.post('/logout', async (req, res) => {
   setClearTokenCookie(res);
-  return res.status(200).json({
-    payload: {
-      
-    }
-  });
+  return res.status(200);
 });
 
 export default auth;

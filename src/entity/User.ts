@@ -29,16 +29,6 @@ class User {
   @Column({ unique: true, length: 255 })
   email!: string;
 
-  @Index()
-  @Column({ unique: true, length: 255 })
-  phoneNumber!: string;
-
-  @Column({ default: false })
-  verifiedEmail!: boolean;
-
-  @Column({ default: false })
-  verifiedPhoneNumber!: boolean;
-
   @Column('timestampz')
   @CreateDateColumn()
   created_at!: Date;

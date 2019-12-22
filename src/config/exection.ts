@@ -10,5 +10,15 @@ export const NOT_FOUND = {
 
 export const CODE_EXPIRED = {
   name: 'CODE_EXPIRED',
-  status: 4006,
+  status: 4006
+};
+
+export const AUTHENTICATION_FAILED = {
+  name: 'AUTHENTICATION_FAILED',
+  status: 401
+};
+
+export const ALREADY_EXIST = {
+  name: 'ALREADY_EXIST',
+  status: 2003
 };

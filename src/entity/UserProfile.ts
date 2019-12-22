@@ -28,9 +28,6 @@ class UserProfile {
   @Column({ length: 255, nullable: true })
   thumbnail!: string;
 
-  @Column({ type: 'int' })
-  age!: number;
-
   @Column({
     default: {},
     type: 'jsonb'
