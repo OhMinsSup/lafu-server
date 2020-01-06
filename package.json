@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "pretypes": "gql-merge --out-file ./src/schema.graphql ./src/api/**/*.graphql",
     "types": "graphql-to-typescript ./src/api/**/*.graphql ./src/@types/graph.d.ts",
     "dev:sync": "npm run typeorm schema:sync",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "dev": "cross-env NODE_ENV=development && ts-node-dev --respawn ./src/server.ts",
     "build:tsc": "tsc",
-    "build": "webpack"
+    "build:graphql": "npm run pretypes && npm run types",
+    "build:webpack": "webpack"
   },
   "keywords": [],
   "author": "",
@@ -28,12 +30,17 @@
     "@types/pg": "^7.11.1",
     "@types/qs": "^6.9.0",
     "@types/shortid": "0.0.29",
+    "@types/ws": "^6.0.4",
     "@typescript-eslint/eslint-plugin": "^2.3.1",
     "@typescript-eslint/parser": "^2.3.1",
+    "babel-core": "^6.26.3",
     "eslint": "^6.4.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
+    "graphql-code-generator": "^0.18.2",
+    "graphql-codegen-typescript-template": "^0.18.2",
+    "graphql-codegen-webpack": "^0.13.0",
     "prettier": "^1.18.2",
     "ts-loader": "^6.1.0",
     "ts-node": "^8.3.0",
@@ -42,11 +49,13 @@
     "tslint": "^5.20.0",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.7.4",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
     "@octokit/rest": "^16.35.0",
-    "aws-lambda": "^0.1.2",
     "axios": "^0.19.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.4",
@@ -57,9 +66,6 @@
     "googleapis": "^45.0.0",
     "gql-merge": "0.0.6",
     "graphql": "^14.5.4",
-    "graphql-code-generator": "^0.18.2",
-    "graphql-codegen-typescript-template": "^0.18.2",
-    "graphql-codegen-webpack": "^0.13.0",
     "graphql-tag": "^2.10.1",
     "graphql-to-typescript": "^0.1.2",
     "graphql-yoga": "^1.18.3",
@@ -72,10 +78,7 @@
     "pg": "^7.12.1",
     "qs": "^6.9.1",
     "reflect-metadata": "^0.1.13",
-    "serverless-http": "^2.3.0",
     "shortid": "^2.2.15",
-    "typeorm": "^0.2.18",
-    "webpack": "^4.41.5",
-    "webpack-graphql-loader": "^1.0.2"
+    "typeorm": "^0.2.18"
   }
 }

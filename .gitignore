@@ -4,3 +4,4 @@ ormconfig.json
 .env.production
 .env.development
 /dist
+.vscode

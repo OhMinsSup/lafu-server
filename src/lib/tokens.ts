@@ -102,7 +102,7 @@ export const refresh = async (req: Request, res: Response, refreshToken: string)
 export const consumeUser = async (req: Request, res: Response, next: NextFunction) => {
   let accessToken: string | undefined = req.cookies['access_token'];
   // tslint:disable-next-line: prefer-const
-  let refreshToken: string | undefined = req.cookies['refresh_token'];
+  const refreshToken: string | undefined = req.cookies['refresh_token'];
 
   const { authorization } = req.headers;
   if (!accessToken && authorization) {
@@ -125,6 +125,7 @@ export const consumeUser = async (req: Request, res: Response, next: NextFunctio
     if (!refreshToken) return next();
     try {
       const userId = await refresh(req, res, refreshToken);
+      // eslint-disable-next-line require-atomic-updates
       res.locals.user_id = userId;
     } catch (e) {
       throw e;
