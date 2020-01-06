@@ -28,6 +28,9 @@ class UserProfile {
   @Column({ length: 255, nullable: true })
   thumbnail!: string;
 
+  @Column({ type: 'bool', default: false })
+  isDark!: boolean;
+
   @Column({
     default: {},
     type: 'jsonb'

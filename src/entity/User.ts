@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import DataLoader from 'dataloader';
 import UserProfile from './UserProfile';
-import UserStatus from './UserStatus';
 import { generateToken } from '../lib/tokens';
 import AuthToken from './AuthToken';
 
@@ -39,9 +38,6 @@ class User {
 
   @OneToOne(type => UserProfile, profile => profile.user)
   profile!: UserProfile;
-
-  @OneToOne(type => UserStatus, status => status.user)
-  status!: UserStatus;
 
   async generateUserToken() {
     const authToken = new AuthToken();

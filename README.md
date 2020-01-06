@@ -24,12 +24,13 @@
 
 - AUTH
   - JsonWebToken
-  - mail & phone 인증
+  - mail
+
+- Video
+  - 트랜스코딩
 
 - Typescript
   - express
-
-- WebSocket
 
 - CI/CD
   - circle ci
@@ -38,6 +39,11 @@
 - Tool
   - eslint, perttier
 
+- SSR
+  - Graphql SSR
+
+- admin 
+  - Svelte
 
 
 ### Database Migration

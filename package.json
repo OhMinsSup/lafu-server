@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "types": "graphql-to-typescript ./src/api/**/*.graphql ./src/@types/graph.d.ts",
     "dev:sync": "npm run typeorm schema:sync",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "dev": "cross-env NODE_ENV=development && ts-node-dev --respawn ./src/server.ts",
-    "build": "tsc"
+    "build:tsc": "tsc",
+    "build": "webpack"
   },
   "keywords": [],
   "author": "",
@@ -44,6 +46,7 @@
   },
   "dependencies": {
     "@octokit/rest": "^16.35.0",
+    "aws-lambda": "^0.1.2",
     "axios": "^0.19.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.4",
@@ -54,6 +57,11 @@
     "googleapis": "^45.0.0",
     "gql-merge": "0.0.6",
     "graphql": "^14.5.4",
+    "graphql-code-generator": "^0.18.2",
+    "graphql-codegen-typescript-template": "^0.18.2",
+    "graphql-codegen-webpack": "^0.13.0",
+    "graphql-tag": "^2.10.1",
+    "graphql-to-typescript": "^0.1.2",
     "graphql-yoga": "^1.18.3",
     "helmet": "^3.21.0",
     "joi": "^14.3.1",
@@ -64,8 +72,10 @@
     "pg": "^7.12.1",
     "qs": "^6.9.1",
     "reflect-metadata": "^0.1.13",
+    "serverless-http": "^2.3.0",
     "shortid": "^2.2.15",
     "typeorm": "^0.2.18",
-    "webpack": "^4.39.3"
+    "webpack": "^4.41.5",
+    "webpack-graphql-loader": "^1.0.2"
   }
 }

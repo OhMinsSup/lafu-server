@@ -10,7 +10,7 @@ export const redirectUri =
     ? `http://localhost:4000${redirectPath}`
     : `https://lafu.io${redirectPath}`;
 
-export function generateSocialLoginLink(provider: SocialProvider, next: string = '/') {
+export function generateSocialLoginLink(provider: SocialProvider, next = '/') {
   const generators = {
     github(next: string) {
       const redirectUriWithNext = `${redirectUri}github?next=${next}`;
