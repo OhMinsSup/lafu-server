@@ -11,7 +11,8 @@
         "strict": true /* Enable all strict type-checking options. */,
         "typeRoots": [
             "node_modules/@types",
-            "src/@types"
+            "src/@types/graph.d.ts",
+            "src/@types/typings.d.ts",
         ],
         "allowJs": true,
         "moduleResolution": "node",
