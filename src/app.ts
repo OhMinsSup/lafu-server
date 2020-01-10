@@ -1,59 +1,59 @@
-import { GraphQLServer } from 'graphql-yoga';
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
 import { createConnection } from 'typeorm';
 import helmet from 'helmet';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
 import compresion from 'compression';
+import createLoaders, { Loaders } from './lib/createLoader';
+import schema from './graphql/schema';
 import routes from './routes';
-import schema from './config/schema';
-import createLoaders from './lib/createLoader';
 
-class App {
-  public app: GraphQLServer;
-  constructor() {
-    this.app = new GraphQLServer({
-      schema,
-      context: contextParams => {
-        return {
-          req: contextParams.request,
-          res: contextParams.response,
-          loaders: createLoaders()
-        };
-      }
-    });
-    this.initiallizeDB();
-    this.middlewares();
-  }
+const app = express();
 
-  private middlewares() {
-    const express = this.app.express;
+app.use(
+  compresion({
+    level: 6
+  })
+);
+app.use(helmet());
+app.use(bodyParser.json());
+app.use(routes);
 
-    express.use(
-      compresion({
-        level: 6
-      })
-    );
+if (process.env.NODE_ENV === 'development') {
+  app.use(logger('dev'));
+}
 
-    express.use(helmet());
-    express.use(bodyParser.json());
-    express.use(cookieParser());
+export type ApolloContext = {
+  user_id: string | null;
+  loaders: Loaders;
+};
 
-    if (process.env.NODE_ENV === 'development') {
-      express.use(logger('dev'));
-    }
-
-    express.use(routes);
-  }
-
-  private async initiallizeDB() {
+const apollo = new ApolloServer({
+  schema,
+  context: async ({ req, res }) => {
     try {
-      await createConnection();
-      console.log(`${process.env.NODE_ENV} Postgres RDBMS connection is established ✅`);
+      return {
+        user_id: res.locals.user_id,
+        loaders: createLoaders()
+      };
     } catch (e) {
-      throw e;
+      return {};
     }
+  },
+  tracing: process.env.NODE_ENV === 'development'
+});
+apollo.applyMiddleware({ app });
+
+async function initiallizeDB() {
+  try {
+    await createConnection();
+    console.log(`${process.env.NODE_ENV} Postgres RDBMS connection is established ✅`);
+  } catch (e) {
+    throw e;
   }
 }
 
-export default new App().app;
+initiallizeDB();
+
+export default app;
