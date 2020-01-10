@@ -18,11 +18,10 @@ app.use(
 );
 app.use(helmet());
 app.use(bodyParser.json());
-app.use(routes);
-
 if (process.env.NODE_ENV === 'development') {
   app.use(logger('dev'));
 }
+app.use(routes);
 
 export type ApolloContext = {
   user_id: string | null;
