@@ -7,8 +7,6 @@ import {
   UpdateDateColumn
 } from 'typeorm';
 
-export type ProducerTarget = 'TVA' | 'OVA' | 'MOVIE';
-
 @Entity('producers', {
   synchronize: false
 })
@@ -17,8 +15,19 @@ class Producer {
   id!: string;
 
   @Index()
-  @Column({ length: 255, enum: ['TVA', 'OVA', 'MOVIE'] })
-  producer!: ProducerTarget;
+  @Column({ type: 'varchar' })
+  producer!: string[];
+
+  @Column({ array: true, type: 'varchar' })
+  drawing!: string[];
+
+  // [2019_1, 2019_2, 2019_3, 2019_4]
+  @Index()
+  @Column({
+    length: 255,
+    nullable: false
+  })
+  released_at!: string;
 
   @Column('timestampz')
   @CreateDateColumn()

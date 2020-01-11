@@ -16,9 +16,6 @@ class Animation {
 
   @Index()
   @Column({ length: 255 })
-  url_slug!: string;
-
-  @Column({ length: 255 })
   title!: string;
 
   @Column({ length: 255 })
@@ -27,17 +24,21 @@ class Animation {
   @Column({ length: 255, nullable: true, type: 'varchar' })
   thumbnail!: string | null;
 
-  @Column({ length: 255 })
-  contentRating!: string;
-
+  // 보고싶다
   @Column({ default: 0 })
   likes!: number;
 
+  // 별점주기
   @Column({ default: 0 })
-  views!: number;
+  stars!: number;
 
+  // 명작 추천
   @Column({ default: 0 })
   recommend!: number;
+
+  // 성인인지 아닌지
+  @Column({ default: false })
+  is_adult!: boolean;
 
   @Column('timestampz')
   @CreateDateColumn()

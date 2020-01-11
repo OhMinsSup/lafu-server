@@ -31,7 +31,5 @@
         "node_modules",
         "dist",
         "build",
-        "webpack.config.js",
-        "ecosystem.config.js"
     ],
 }
