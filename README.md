@@ -2,13 +2,17 @@
 
 ### Description
 
-아직 준비중입니다...
+애니메이션 사이트 클론 프로젝트
 
 ### Stack
 
+-EVN 
+ - PM2
+ - Webpack
+
 - API
   - GraphQL
-    - graphql-yoga
+    - Apollo Graphql
     - dataloder
 
   - REST API
@@ -20,7 +24,7 @@
   - redis
 
 - AWS
-  - es2 or ayncapp
+  - ec2, CodeDeploy, S3, RDBS - postgresql
 
 - AUTH
   - JsonWebToken
@@ -33,7 +37,6 @@
   - express
 
 - CI/CD
-  - circle ci
   - tarvis ci
 
 - Tool
@@ -53,14 +56,4 @@
   npm run dev:sync
 ```
 
-### AWS Serverless Deployment
-
-```base
-...준비중
-```
-
 ### Workings
-
-1. GraphQL 서버 구축및 typeorm 유저 모델 생성 ✅
-
-2. AWS 서버리스 및 Webpack 설정

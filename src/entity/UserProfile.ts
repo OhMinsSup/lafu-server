@@ -12,6 +12,8 @@ import DataLoader from 'dataloader';
 import User from './User';
 import { normalize } from '../lib/utils';
 
+export type GenderTarget = 'MALE' | 'FEMALE' | 'UNKNOWN';
+
 @Entity('user_profiles', {
   synchronize: false
 })
@@ -22,11 +24,14 @@ class UserProfile {
   @Column({ length: 255 })
   display_name!: string;
 
-  @Column({ length: 255 })
-  short_bio!: string;
-
   @Column({ length: 255, nullable: true })
   thumbnail!: string;
+
+  @Column({ length: 255, enum: ['MALE', 'FEMALE', 'UNKNOWN'], default: 'UNKNOWN' })
+  gender!: GenderTarget;
+
+  @Column({ length: 255 })
+  birth!: string;
 
   @Column({ type: 'bool', default: false })
   isDark!: boolean;
