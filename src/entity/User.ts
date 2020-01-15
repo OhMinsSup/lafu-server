@@ -13,9 +13,7 @@ import UserProfile from './UserProfile';
 import { generateToken } from '../lib/tokens';
 import AuthToken from './AuthToken';
 
-@Entity('users', {
-  synchronize: false
-})
+@Entity('users')
 class User {
   @PrimaryGeneratedColumn('uuid')
   id!: string;

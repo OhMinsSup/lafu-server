@@ -1,7 +1,6 @@
 import { gql, IResolvers, makeExecutableSchema } from 'apollo-server-express';
 import merge from 'lodash/merge';
 import * as hello from './hello';
-import * as user from './user';
 import DateScalar from './scalars/DateScalar';
 
 const typeDef = gql`
@@ -24,8 +23,8 @@ const resolvers: IResolvers = {
 };
 
 const schema = makeExecutableSchema({
-  typeDefs: [typeDef, hello.typeDef, user.typeDef],
-  resolvers: merge(resolvers, hello.resolvers, user.resolvers)
+  typeDefs: [typeDef, hello.typeDef],
+  resolvers: merge(resolvers, hello.resolvers)
 });
 
 export default schema;

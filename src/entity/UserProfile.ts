@@ -14,9 +14,7 @@ import { normalize } from '../lib/utils';
 
 export type GenderTarget = 'MALE' | 'FEMALE' | 'UNKNOWN';
 
-@Entity('user_profiles', {
-  synchronize: false
-})
+@Entity('user_profiles')
 class UserProfile {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -24,14 +22,14 @@ class UserProfile {
   @Column({ length: 255 })
   display_name!: string;
 
-  @Column({ length: 255, nullable: true })
-  thumbnail!: string;
+  @Column({ length: 255, nullable: true, type: 'varchar' })
+  thumbnail!: string | null;
 
   @Column({ length: 255, enum: ['MALE', 'FEMALE', 'UNKNOWN'], default: 'UNKNOWN' })
   gender!: GenderTarget;
 
-  @Column({ length: 255 })
-  birth!: string;
+  @Column({ length: 255, nullable: true, type: 'varchar' })
+  birth!: string | null;
 
   @Column({ type: 'bool', default: false })
   isDark!: boolean;

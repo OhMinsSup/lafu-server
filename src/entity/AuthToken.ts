@@ -9,9 +9,7 @@ import {
 } from 'typeorm';
 import User from './User';
 
-@Entity('auth_tokens', {
-  synchronize: false
-})
+@Entity('auth_tokens')
 class AuthToken {
   @PrimaryGeneratedColumn('uuid')
   id!: string;

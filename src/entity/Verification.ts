@@ -7,16 +7,14 @@ import {
   UpdateDateColumn
 } from 'typeorm';
 
-export type VerificationTarget = 'PHONE' | 'EMAIL';
+export type VerificationTarget = 'EMAIL';
 
-@Entity('verifications', {
-  synchronize: false
-})
+@Entity('verifications')
 class Verification {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'text', enum: ['PHONE', 'EMAIL'] })
+  @Column({ type: 'text', enum: ['EMAIL'] })
   target!: VerificationTarget;
 
   @Column({ length: 255 })
