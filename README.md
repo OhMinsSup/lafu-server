@@ -52,7 +52,7 @@
 ### Database Migration
 
 ```bash
-  npm run typeorm migration:create -- -n filename
+  npm run typeorm migration:create -n filename
   npm run dev:sync
 ```
 
