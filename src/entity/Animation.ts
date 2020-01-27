@@ -12,9 +12,6 @@ import {
 } from 'typeorm';
 import User from './User';
 import Tag from './Tag';
-import Genre from './Genre';
-import Producer from './Poducer';
-import Broadcasting from './Broadcasting';
 
 @Entity('animations')
 class Animation {
@@ -28,11 +25,8 @@ class Animation {
   @Column({ length: 255 })
   summary!: string;
 
-  @Column({ length: 255, nullable: true, type: 'varchar' })
-  thumbnail!: string | null;
-
-  @Column('uuid')
-  fk_user_id!: string;
+  @Column({ length: 255, type: 'varchar' })
+  thumbnail!: string;
 
   // 보고싶다
   @Column({ default: 0 })
@@ -49,6 +43,9 @@ class Animation {
   // 성인인지 아닌지
   @Column({ default: false })
   is_adult!: boolean;
+
+  @Column('uuid')
+  fk_user_id!: string;
 
   @Column('timestampz')
   @CreateDateColumn()
@@ -73,42 +70,6 @@ class Animation {
     }
   })
   tags!: Tag[];
-
-  @ManyToMany(type => Genre)
-  @JoinTable({
-    name: 'anis_genres',
-    joinColumn: {
-      name: 'fk_ani_id'
-    },
-    inverseJoinColumn: {
-      name: 'fk_genre_id'
-    }
-  })
-  genres!: Genre[];
-
-  @ManyToMany(type => Producer)
-  @JoinTable({
-    name: 'anis_producers',
-    joinColumn: {
-      name: 'fk_ani_id'
-    },
-    inverseJoinColumn: {
-      name: 'fk_pd_id'
-    }
-  })
-  producers!: Producer[];
-
-  @ManyToMany(type => Broadcasting)
-  @JoinTable({
-    name: 'anis_broadcastings',
-    joinColumn: {
-      name: 'fk_ani_id'
-    },
-    inverseJoinColumn: {
-      name: 'fk_bc_id'
-    }
-  })
-  broadcastings!: Broadcasting[];
 }
 
 export default Animation;

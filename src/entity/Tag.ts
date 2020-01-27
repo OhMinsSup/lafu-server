@@ -14,7 +14,11 @@ class Tag {
 
   @Index()
   @Column({ length: 255 })
-  tag!: string;
+  tag_name!: string;
+
+  @Index()
+  @Column({ default: false })
+  is_review!: boolean;
 
   @Column('timestampz')
   @CreateDateColumn()

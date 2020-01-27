@@ -4,17 +4,22 @@ import {
   Index,
   Column,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn
 } from 'typeorm';
+import Animation from './Animation';
 
 @Entity('producers')
 class Producer {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Index()
   @Column({ type: 'varchar' })
   producer!: string[];
+
+  @Column({ type: 'varchar' })
+  screenplay!: string[];
 
   @Column({ array: true, type: 'varchar' })
   drawing!: string[];
@@ -27,6 +32,9 @@ class Producer {
   })
   released_at!: string;
 
+  @Column('uuid')
+  fk_ani_id!: string;
+
   @Column('timestampz')
   @CreateDateColumn()
   created_at!: Date;
@@ -34,6 +42,10 @@ class Producer {
   @Column('timestamptz')
   @UpdateDateColumn()
   updated_at!: Date;
+
+  @ManyToOne(type => Animation, { cascade: true, eager: true })
+  @JoinColumn({ name: 'fk_ani_id' })
+  animation!: Animation;
 }
 
 export default Producer;

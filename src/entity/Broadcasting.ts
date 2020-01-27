@@ -4,8 +4,13 @@ import {
   Index,
   Column,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  getRepository
 } from 'typeorm';
+import Animation from './Animation';
+import DataLoader = require('dataloader');
 
 export type BroadcastingTarget = 'OPEN' | 'CLOSE';
 export type MediumType = 'TVA' | 'OVA' | 'MOVIE';
@@ -28,6 +33,9 @@ class Broadcasting {
   @Column({ length: 255, enum: ['TVA', 'OVA', 'MOVIE'] })
   medium!: MediumType;
 
+  @Column('uuid')
+  fk_ani_id!: string;
+
   @Column('timestampz')
   @CreateDateColumn()
   created_at!: Date;
@@ -35,6 +43,29 @@ class Broadcasting {
   @Column('timestamptz')
   @UpdateDateColumn()
   updated_at!: Date;
+
+  @ManyToOne(type => Animation, { cascade: true, eager: true })
+  @JoinColumn({ name: 'fk_ani_id' })
+  animation!: Animation;
 }
+
+export const createBroadcastingLoader = () => {
+  new DataLoader<string, Broadcasting[]>(async animationIdxs => {
+    const repo = getRepository(Broadcasting);
+    const broadcastings = await repo
+      .createQueryBuilder('broadcastings')
+      .where('fk_ani_id IN (:...animationIdxs)', { animationIdxs })
+      .getMany();
+    const BroadcastingListMap: {
+      [key: string]: Broadcasting[];
+    } = {};
+    animationIdxs.forEach(animationIdx => (BroadcastingListMap[animationIdx] = []));
+    broadcastings.forEach(broadcasting => {
+      BroadcastingListMap[broadcasting.fk_ani_id].push(broadcasting);
+    });
+    const ordered = animationIdxs.map(animationIdx => BroadcastingListMap[animationIdx]);
+    return ordered;
+  });
+};
 
 export default Broadcasting;
