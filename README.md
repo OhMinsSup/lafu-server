@@ -2,8 +2,6 @@
 
 ### Description
 
-애니메이션 사이트 클론 프로젝트
-
 ### Stack
 
 -EVN 
@@ -45,8 +43,6 @@
 - SSR
   - Graphql SSR
 
-- admin 
-  - Svelte
 
 
 ### Database Migration
