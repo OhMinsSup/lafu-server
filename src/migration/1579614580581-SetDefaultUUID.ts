@@ -1,8 +1,21 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-const names = ['user', 'user_profiles', 'user_status', 'auth_tokens', 'verifications'];
+const names = [
+  'verifications',
+  'users',
+  'user_profiles',
+  'tags',
+  'producers',
+  'genres',
+  'broadcastings',
+  'anis_tags',
+  'anis_producers',
+  'anis_genres',
+  'anis_broadcastings',
+  'animations'
+];
 
-export class SetDefaultUUID1568222763601 implements MigrationInterface {
+export class SetDefaultUUID1579614580581 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     for (let i = 0; i < names.length; i += 1) {
       await queryRunner.query(

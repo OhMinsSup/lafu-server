@@ -7,7 +7,7 @@ import User from '../../../entity/User';
 import { createAuthEmail } from '../../../template/emailTemplates';
 import { sendMail } from '../../../lib/sendEmail';
 import { BAD_REQUEST, NOT_FOUND, CODE_EXPIRED, ALREADY_EXIST } from '../../../config/exection';
-import UserProfile from '../../../entity/UserProfile';
+import UserProfile, { GenderTarget } from '../../../entity/UserProfile';
 import {
   generateToken,
   setTokenCookie,
@@ -169,7 +169,9 @@ auth.post('/register/local', async (req, res) => {
     form: {
       display_name: string;
       username: string;
-      short_bio: string;
+      thumbnail: string | null;
+      gender: GenderTarget | null;
+      birth: string | null;
     };
   }
 
@@ -192,9 +194,11 @@ auth.post('/register/local', async (req, res) => {
           .min(3)
           .max(16)
           .required(),
-        short_bio: Joi.string()
-          .allow('')
-          .max(140)
+        thumbnail: Joi.string()
+          .uri()
+          .allow(null),
+        gender: Joi.string().allow(null),
+        birth: Joi.string().allow(null)
       })
       .required()
   });
@@ -239,7 +243,7 @@ auth.post('/register/local', async (req, res) => {
       payload: {
         name: ALREADY_EXIST.name,
         status: ALREADY_EXIST.status,
-        message: '이미 존재하는 이메일또는 유저명 입니다.'
+        message: '이미 존재하는 이메일 또는 유저명 입니다.'
       }
     });
   }
@@ -260,7 +264,9 @@ auth.post('/register/local', async (req, res) => {
   const profile = new UserProfile();
   profile.fk_user_id = user.id;
   profile.display_name = form.display_name;
-  profile.short_bio = form.short_bio;
+  profile.thumbnail = form.thumbnail || null;
+  profile.birth = form.birth || null;
+  profile.gender = form.gender || 'UNKNOWN';
   await getRepository(UserProfile).save(profile);
 
   const tokens = await user.generateUserToken();

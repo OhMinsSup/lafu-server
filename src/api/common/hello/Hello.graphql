@@ -1,7 +1,0 @@
-type HelloResponse {
-  result: String
-}
-
-type Query {
-  Hello(name: String): HelloResponse!
-}

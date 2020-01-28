@@ -1,31 +1,24 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
   Index,
+  Column,
   CreateDateColumn,
   UpdateDateColumn
 } from 'typeorm';
 
-export type VerificationTarget = 'EMAIL';
-
-@Entity('verifications')
-class Verification {
+@Entity('tags')
+class Tag {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'text', enum: ['EMAIL'] })
-  target!: VerificationTarget;
-
-  @Column({ length: 255 })
-  payload!: string;
-
   @Index()
   @Column({ length: 255 })
-  code!: string;
+  tag_name!: string;
 
+  @Index()
   @Column({ default: false })
-  logged!: boolean;
+  is_review!: boolean;
 
   @Column('timestampz')
   @CreateDateColumn()
@@ -36,4 +29,4 @@ class Verification {
   updated_at!: Date;
 }
 
-export default Verification;
+export default Tag;

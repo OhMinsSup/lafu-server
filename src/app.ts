@@ -1,59 +1,46 @@
-import { GraphQLServer } from 'graphql-yoga';
-import { createConnection } from 'typeorm';
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
 import helmet from 'helmet';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
 import compresion from 'compression';
+import createLoaders, { Loaders } from './lib/createLoader';
+import schema from './graphql/schema';
 import routes from './routes';
-import schema from './config/schema';
-import createLoaders from './lib/createLoader';
 
-class App {
-  public app: GraphQLServer;
-  constructor() {
-    this.app = new GraphQLServer({
-      schema,
-      context: contextParams => {
-        return {
-          req: contextParams.request,
-          res: contextParams.response,
-          loaders: createLoaders()
-        };
-      }
-    });
-    this.initiallizeDB();
-    this.middlewares();
-  }
+const app = express();
 
-  private middlewares() {
-    const express = this.app.express;
-
-    express.use(
-      compresion({
-        level: 6
-      })
-    );
-
-    express.use(helmet());
-    express.use(bodyParser.json());
-    express.use(cookieParser());
-
-    if (process.env.NODE_ENV === 'development') {
-      express.use(logger('dev'));
-    }
-
-    express.use(routes);
-  }
-
-  private async initiallizeDB() {
-    try {
-      await createConnection();
-      console.log(`${process.env.NODE_ENV} Postgres RDBMS connection is established ✅`);
-    } catch (e) {
-      throw e;
-    }
-  }
+app.use(
+  compresion({
+    level: 6
+  })
+);
+app.use(helmet());
+app.use(bodyParser.json());
+if (process.env.NODE_ENV === 'development') {
+  app.use(logger('dev'));
 }
+app.use(routes);
 
-export default new App().app;
+export type ApolloContext = {
+  user_id: string | null;
+  loaders: Loaders;
+};
+
+const apollo = new ApolloServer({
+  schema,
+  context: async ({ req, res }) => {
+    try {
+      return {
+        user_id: res.locals.user_id,
+        loaders: createLoaders()
+      };
+    } catch (e) {
+      return {};
+    }
+  },
+  tracing: process.env.NODE_ENV === 'development'
+});
+apollo.applyMiddleware({ app });
+
+export default app;
