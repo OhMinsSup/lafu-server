@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import User from './User';
 import Tag from './Tag';
+import Genre from './Genre';
 
 @Entity('animations')
 class Animation {
@@ -70,6 +71,18 @@ class Animation {
     }
   })
   tags!: Tag[];
+
+  @ManyToMany(type => Genre)
+  @JoinTable({
+    name: 'anis_genres',
+    joinColumn: {
+      name: 'fk_ani_id'
+    },
+    inverseJoinColumn: {
+      name: 'fk_genre_id'
+    }
+  })
+  genres!: Genre[];
 }
 
 export default Animation;

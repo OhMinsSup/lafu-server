@@ -3,19 +3,19 @@ import {
   PrimaryGeneratedColumn,
   Index,
   Column,
-  UpdateDateColumn,
   CreateDateColumn,
+  UpdateDateColumn,
   ManyToOne,
   JoinColumn,
   getRepository
 } from 'typeorm';
-import DataLoader from 'dataloader';
+import Genre from './Genre';
 import Animation from './Animation';
-import Tag from './Tag';
+import DataLoader = require('dataloader');
 import { groupById } from '../lib/utils';
 
-@Entity('anis_tags')
-class AnisTags {
+@Entity('anis_genres')
+class AnisGenres {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
@@ -25,7 +25,7 @@ class AnisTags {
 
   @Index()
   @Column('uuid')
-  fk_tag_id!: string;
+  fk_genre_id!: string;
 
   @Column('timestampz')
   @CreateDateColumn()
@@ -35,30 +35,30 @@ class AnisTags {
   @UpdateDateColumn()
   updated_at!: Date;
 
-  @ManyToOne(type => Tag, { cascade: true, eager: true })
-  @JoinColumn({ name: 'fk_tag_id' })
-  tag!: Tag;
+  @ManyToOne(type => Genre, { cascade: true, eager: true })
+  @JoinColumn({ name: 'fk_genre_id' })
+  genre!: Genre;
 
   @ManyToOne(type => Animation, { cascade: true, eager: true })
   @JoinColumn({ name: 'fk_ani_id' })
   animation!: Animation;
 }
 
-export const createTagsLoader = () => {
-  new DataLoader<string, Tag[]>(async animationIdxs => {
-    const repo = getRepository(AnisTags);
-    const anisTags = await repo
-      .createQueryBuilder('anis_tags')
+export const createGenresLoader = () => {
+  new DataLoader<string, Genre[]>(async animationIdxs => {
+    const repo = getRepository(AnisGenres);
+    const anisGenres = await repo
+      .createQueryBuilder('anis_genres')
       .where('fk_ani_id IN (:...animationIdxs)', { animationIdxs })
-      .leftJoinAndSelect('anis_tags.tag', 'tag')
+      .leftJoinAndSelect('anis_genres.genre', 'genre')
       .orderBy('fk_ani_id', 'ASC')
-      .orderBy('tag.tag_name', 'ASC')
+      .orderBy('genre.genre_name', 'ASC')
       .getMany();
 
-    return groupById<AnisTags>(animationIdxs, anisTags, at => at.fk_ani_id).map(array =>
-      array.map(at => at.tag)
+    return groupById<AnisGenres>(animationIdxs, anisGenres, at => at.fk_ani_id).map(array =>
+      array.map(at => at.genre)
     );
   });
 };
 
-export default AnisTags;
+export default AnisGenres;

@@ -9,8 +9,8 @@ import {
   JoinColumn,
   getRepository
 } from 'typeorm';
+import DataLoader from 'dataloader';
 import Animation from './Animation';
-import DataLoader = require('dataloader');
 
 export type BroadcastingTarget = 'OPEN' | 'CLOSE';
 export type MediumType = 'TVA' | 'OVA' | 'MOVIE';

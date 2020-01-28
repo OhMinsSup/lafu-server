@@ -1,6 +1,5 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
-import { createConnection } from 'typeorm';
 import helmet from 'helmet';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
@@ -43,16 +42,5 @@ const apollo = new ApolloServer({
   tracing: process.env.NODE_ENV === 'development'
 });
 apollo.applyMiddleware({ app });
-
-async function initiallizeDB() {
-  try {
-    await createConnection();
-    console.log(`${process.env.NODE_ENV} Postgres RDBMS connection is established ✅`);
-  } catch (e) {
-    throw e;
-  }
-}
-
-initiallizeDB();
 
 export default app;
