@@ -2,50 +2,30 @@ import { gql, IResolvers } from 'apollo-server-express';
 import { ApolloContext } from '../app';
 
 export const typeDef = gql`
-  type Broadcasting {
-    id: ID!
-    contentRating: String!
-    broadcast_type: String!
-    medium: String!
-    created_at: String!
-    updated_at: String!
-  }
-
-  type Genre {
-    id: ID!
-    genre: String!
-    created_at: String!
-    updated_at: String!
-  }
-
-  type Tag {
-    id: ID!
-    tag: String!
-    is_review: Boolean!
-    created_at: String!
-    updated_at: String!
-  }
-
   type Producer {
     id: ID!
+    fk_ani_id: ID!
     producer: [String]
+    screenplay: [String]
     drawing: [String]
-    released_at: String!
-    created_at: String!
-    updated_at: String!
+    released_at: String
+    created_at: String
+    updated_at: String
   }
 
   type Animation {
     id: ID!
-    title: String!
-    summary: String!
-    thumbnail: String!
-    is_adult: Boolean!
+    title: String
+    summary: String
+    thumbnail: String
     likes: Int
     stars: Int
     recommend: Int
-    created_at: String!
-    updated_at: String!
+    is_adult: Boolean
+    created_at: String
+    updated_at: String
+    genres: [String]
+    tags: [String]
   }
 
   extend type Mutation {
@@ -59,6 +39,4 @@ export const typeDef = gql`
   }
 `;
 
-export const resolvers: IResolvers<any, ApolloContext> = {
-  Mutation: {}
-};
+export const resolvers: IResolvers<any, ApolloContext> = {};

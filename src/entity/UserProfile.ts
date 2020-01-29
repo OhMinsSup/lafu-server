@@ -31,9 +31,6 @@ class UserProfile {
   @Column({ length: 255, nullable: true, type: 'varchar' })
   birth!: string | null;
 
-  @Column({ type: 'bool', default: false })
-  isDark!: boolean;
-
   @Column({
     default: {},
     type: 'jsonb'

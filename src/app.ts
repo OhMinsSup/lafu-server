@@ -50,6 +50,8 @@ app.use(routes);
 export type ApolloContext = {
   user_id: string | null;
   loaders: Loaders;
+  ip: string;
+  unsetCookie: () => void;
 };
 
 const apollo = new ApolloServer({
