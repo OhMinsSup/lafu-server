@@ -1,7 +1,5 @@
 # LAFU-SEVER
 
-### Description
-
 ### Stack
 
 -EVN 
@@ -22,14 +20,22 @@
   - redis
 
 - AWS
-  - ec2, CodeDeploy, S3, RDBS - postgresql
-
+  - EC2
+  - CodeDeploy
+  - AutoScaling
+  - Elastic Load Balancing
+  - RDBS 
+    - postgresql
 - AUTH
   - JsonWebToken
-  - mail
+  - nodemailer
+  - social
+    - google
+    - facebook
+    - github 
 
-- Video
-  - 트랜스코딩 (Cloudinary)
+- Video/Image Upload
+  -  Cloudinary
 
 - Typescript
   - express
@@ -38,12 +44,8 @@
   - tarvis ci
 
 - Tool
-  - eslint, perttier
-
-- SSR
-  - Graphql SSR
-
-
+  - eslint
+  - perttier
 
 ### Database Migration
 

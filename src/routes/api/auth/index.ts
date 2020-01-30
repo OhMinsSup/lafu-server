@@ -14,8 +14,11 @@ import {
   setClearTokenCookie,
   decodeToken
 } from '../../../lib/tokens';
+import social from './social';
 
 const auth = Router();
+
+auth.use('/social', social);
 
 auth.post('/sendEmail', async (req, res) => {
   interface Body {
