@@ -27,16 +27,6 @@ export const typeDef = gql`
     genres: [String]
     tags: [String]
   }
-
-  extend type Mutation {
-    writeAnimation(
-      title: String
-      summary: String
-      thumbnail: String
-      is_adult: String
-      tags: [String]
-    ): Animation
-  }
 `;
 
 export const resolvers: IResolvers<any, ApolloContext> = {};

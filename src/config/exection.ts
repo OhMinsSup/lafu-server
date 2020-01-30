@@ -3,6 +3,11 @@ export const BAD_REQUEST = {
   status: 400
 };
 
+export const CONTENT_TYPE = {
+  name: 'CONTENT_TYPE',
+  status: 401
+};
+
 export const NOT_FOUND = {
   name: 'NOT_FOUND',
   status: 404

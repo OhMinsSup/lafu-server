@@ -29,7 +29,7 @@
   - mail
 
 - Video
-  - 트랜스코딩
+  - 트랜스코딩 (Cloudinary)
 
 - Typescript
   - express
