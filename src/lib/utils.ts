@@ -11,6 +11,15 @@ export function normalize<T>(
   return object;
 }
 
+export function normalizeKeyOfKey(array: string[]) {
+  const object: {
+    [key: string]: string;
+  } = {};
+  array.forEach(key => {
+    object[key] = key;
+  });
+}
+
 export function groupById<T>(order: string[], data: T[], idResolver: (row: T) => string) {
   const map: {
     [key: string]: T[];
