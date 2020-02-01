@@ -7,13 +7,12 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
-  getRepository,
-  getManager
+  getRepository
 } from 'typeorm';
 import DataLoader from 'dataloader';
 import Animation from './Animation';
 import Tag from './Tag';
-import { groupById, normalize, normalizeKeyOfKey } from '../lib/utils';
+import { groupById, normalize } from '../lib/utils';
 
 @Entity('anis_tags')
 class AnisTags {
@@ -44,23 +43,8 @@ class AnisTags {
   @JoinColumn({ name: 'fk_ani_id' })
   animation!: Animation;
 
-  static async getBelogingTags(aniId: string) {
-    const manager = getManager();
-    const tags = await manager.query(
-      `
-      select distinct  * from tags
-      inner join anis_tags on tags.id = anis_tags.fk_ani_id
-      inner join tags on anis_tags.fk_tag_id = tags.id
-      where 
-      `,
-      [aniId]
-    );
-
-    return tags;
-  }
-
-  static async syncAnimationTags(aniId: string, tagIds: string[]) {
-    if (!aniId || tagIds.length === 0) {
+  static async syncAnimationTags(aniId: string, tags: Tag[]) {
+    if (!aniId || tags.length === 0) {
       return null;
     }
 
@@ -74,7 +58,7 @@ class AnisTags {
 
     const normalized = {
       prev: normalize(prevAniTags, aniTag => aniTag.fk_tag_id),
-      current: normalizeKeyOfKey(tagIds)
+      current: normalize(tags)
     };
 
     // remove tags are missing
@@ -82,11 +66,11 @@ class AnisTags {
     missing.forEach(tag => repo.remove(tag));
 
     // adds tags that are new
-    const tagsToAdd = tagIds.filter(tagId => !normalized.prev[tagId]);
-    const anisTags = tagsToAdd.map(tagId => {
+    const tagsToAdd = tags.filter(tag => !normalized.prev[tag.id]);
+    const anisTags = tagsToAdd.map(tag => {
       const aniTag = new AnisTags();
       aniTag.fk_ani_id = aniId;
-      aniTag.fk_tag_id = tagId;
+      aniTag.fk_tag_id = tag.id;
       return aniTag;
     });
     return repo.save(anisTags);

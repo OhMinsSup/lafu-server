@@ -68,7 +68,7 @@ class Episode {
   animation!: Animation;
 }
 
-export const createEpisodeLoader = () => {
+export const createEpisodeLoader = () =>
   new DataLoader<string, Episode[]>(async animationIdxs => {
     const repo = getRepository(Episode);
     const episodes = await repo
@@ -86,6 +86,4 @@ export const createEpisodeLoader = () => {
     const ordered = animationIdxs.map(animationIdx => EpisodeListMap[animationIdx]);
     return ordered;
   });
-};
-
 export default Episode;

@@ -49,7 +49,7 @@ class Broadcasting {
   animation!: Animation;
 }
 
-export const createBroadcastingLoader = () => {
+export const createBroadcastingLoader = () =>
   new DataLoader<string, Broadcasting[]>(async animationIdxs => {
     const repo = getRepository(Broadcasting);
     const broadcastings = await repo
@@ -66,6 +66,5 @@ export const createBroadcastingLoader = () => {
     const ordered = animationIdxs.map(animationIdx => BroadcastingListMap[animationIdx]);
     return ordered;
   });
-};
 
 export default Broadcasting;

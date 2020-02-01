@@ -12,7 +12,7 @@ import {
 import Genre from './Genre';
 import Animation from './Animation';
 import DataLoader = require('dataloader');
-import { groupById, normalize, normalizeKeyOfKey } from '../lib/utils';
+import { groupById, normalize } from '../lib/utils';
 
 @Entity('anis_genres')
 class AnisGenres {
@@ -43,8 +43,8 @@ class AnisGenres {
   @JoinColumn({ name: 'fk_ani_id' })
   animation!: Animation;
 
-  static async syncAnimationGenres(aniId: string, genreIds: string[]) {
-    if (!aniId || genreIds.length === 0) {
+  static async syncAnimationGenres(aniId: string, genres: Genre[]) {
+    if (!aniId || genres.length === 0) {
       return null;
     }
 
@@ -58,7 +58,7 @@ class AnisGenres {
 
     const normalized = {
       prev: normalize(prevGenres, aniGenre => aniGenre.fk_genre_id),
-      current: normalizeKeyOfKey(genreIds)
+      current: normalize(genres)
     };
 
     // remove genres are missing
@@ -66,11 +66,11 @@ class AnisGenres {
     missing.forEach(genre => repo.remove(genre));
 
     // adds genres that are new
-    const genresToAdd = genreIds.filter(genreId => !normalized.prev[genreId]);
-    const anisGenres = genresToAdd.map(genreId => {
+    const genresToAdd = genres.filter(genre => !normalized.prev[genre.id]);
+    const anisGenres = genresToAdd.map(genre => {
       const aniGenre = new AnisGenres();
       aniGenre.fk_ani_id = aniId;
-      aniGenre.fk_genre_id = genreId;
+      aniGenre.fk_genre_id = genre.id;
       return aniGenre;
     });
     return repo.save(anisGenres);

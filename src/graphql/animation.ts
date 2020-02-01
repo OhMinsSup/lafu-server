@@ -7,6 +7,8 @@ import Animation from '../entity/Animation';
 import { BAD_REQUEST } from '../config/exection';
 import AnisTags from '../entity/AnisTags';
 import AnisGenres from '../entity/AnisGenre';
+import Tag from '../entity/Tag';
+import Genre from '../entity/Genre';
 
 export const typeDef = gql`
   type Producer {
@@ -69,8 +71,7 @@ export const resolvers: IResolvers<any, ApolloContext> = {
       if (!ctx.user_id) {
         throw new AuthenticationError('Not Logged In');
       }
-      //Tag와 Genre는 id값을 받아서 처리 할 것
-      // 왜냐하면 각 태그와 장르로 관리하기 위해서
+
       const aniRepo = getRepository(Animation);
       const animation = new Animation();
       animation.fk_user_id = ctx.user_id;
@@ -80,18 +81,21 @@ export const resolvers: IResolvers<any, ApolloContext> = {
       animation.is_adult = args.is_adult;
 
       await aniRepo.save(animation);
-      const syncTags = await AnisTags.syncAnimationTags(animation.id, args.tags);
+      const tagsData = await Promise.all(args.tags.map(Tag.findTag));
+      const genresData = await Promise.all(args.genres.map(Genre.findGenre));
+
+      const syncTags = await AnisTags.syncAnimationTags(animation.id, tagsData);
       if (!syncTags) {
         throw new ApolloError('Tag value was not deleted or added normally.', BAD_REQUEST.name);
       }
 
-      const syncGenre = await AnisGenres.syncAnimationGenres(animation.id, args.genres);
+      const syncGenre = await AnisGenres.syncAnimationGenres(animation.id, genresData);
       if (!syncGenre) {
         throw new ApolloError('Genre value was not deleted or added normally.', BAD_REQUEST.name);
       }
 
-      animation.tags = [];
-      animation.genres = [];
+      animation.tags = tagsData;
+      animation.genres = genresData;
       return animation;
     }
   }
