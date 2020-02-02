@@ -13,12 +13,22 @@ export const typeDef = gql`
     updated_at: String
   }
 
+  extend type Query {
+    getTags(): [Tag]
+  }
+
   extend type Mutation {
     writeTag(tagName: String): Tag
   }
 `;
 
 export const resolvers: IResolvers<any, ApolloContext> = {
+  Query: {
+    getTags: async (_, __, ___) => {
+      const tags = await Tag.getTags();
+      return tags;
+    }
+  },
   Mutation: {
     writeTag: async (_, args: WriteTag, ctx) => {
       const schema = Joi.object().keys({

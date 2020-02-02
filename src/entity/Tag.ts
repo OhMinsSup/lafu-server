@@ -25,6 +25,12 @@ class Tag {
   @UpdateDateColumn()
   updated_at!: Date;
 
+  static async getTags() {
+    const repo = getRepository(Tag);
+    const tags = await repo.createQueryBuilder('tag').getMany();
+    return tags;
+  }
+
   static findByName(name: string) {
     const repo = getRepository(Tag);
     return repo

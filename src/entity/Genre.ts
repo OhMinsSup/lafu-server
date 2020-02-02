@@ -25,6 +25,12 @@ class Genre {
   @UpdateDateColumn()
   updated_at!: Date;
 
+  static async getGenres() {
+    const repo = getRepository(Genre);
+    const genres = await repo.createQueryBuilder('genre').getMany();
+    return genres;
+  }
+
   static findByName(name: string) {
     const repo = getRepository(Genre);
     return repo

@@ -13,12 +13,22 @@ export const typeDef = gql`
     updated_at: String
   }
 
+  extend type Query {
+    getGenres(): [Genre]
+  }
+
   extend type Mutation {
     writeGenre(genreName: String): Genre
   }
 `;
 
 export const resolvers: IResolvers<any, ApolloContext> = {
+  Query: {
+    getGenres: async (_, __, ___) => {
+      const genres = await Genre.getGenres();
+      return genres;
+    }
+  },
   Mutation: {
     writeGenre: async (_, args: WriteGenre, ctx) => {
       const schema = Joi.object().keys({
