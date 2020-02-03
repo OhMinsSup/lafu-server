@@ -29,6 +29,23 @@ class Animation {
   @Column({ length: 255, type: 'varchar' })
   thumbnail!: string;
 
+  @Column({ type: 'varchar' })
+  producer!: string[];
+
+  @Column({ type: 'varchar' })
+  screenplay!: string[];
+
+  @Column({ array: true, type: 'varchar' })
+  drawing!: string[];
+
+  // [2019_1, 2019_2, 2019_3, 2019_4]
+  @Index()
+  @Column({
+    length: 255,
+    nullable: false
+  })
+  quarter!: string;
+
   // 보고싶다
   @Column({ default: 0 })
   likes!: number;

@@ -1,4 +1,4 @@
-import { gql, IResolvers } from 'apollo-server-express';
+import { gql, IResolvers, AuthenticationError } from 'apollo-server-express';
 import { ApolloContext } from '../app';
 
 export const typeDef = gql`
@@ -11,6 +11,18 @@ export const typeDef = gql`
     created_at: String
     updated_at: String
   }
+
+  extend type Mutation {
+    createBroadcasting(name: String!): Broadcasting
+  }
 `;
 
-export const resolvers: IResolvers<any, ApolloContext> = {};
+export const resolvers: IResolvers<any, ApolloContext> = {
+  Mutation: {
+    createBroadcasting: async (parent, args, ctx) => {
+      if (!ctx.user_id) {
+        throw new AuthenticationError('Not Logged In');
+      }
+    }
+  }
+};

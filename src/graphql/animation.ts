@@ -9,24 +9,18 @@ import AnisTags from '../entity/AnisTags';
 import AnisGenres from '../entity/AnisGenre';
 import Tag from '../entity/Tag';
 import Genre from '../entity/Genre';
+import Broadcasting from '../entity/Broadcasting';
 
 export const typeDef = gql`
-  type Producer {
-    id: ID!
-    fk_ani_id: ID!
-    producer: [String]
-    screenplay: [String]
-    drawing: [String]
-    released_at: String
-    created_at: String
-    updated_at: String
-  }
-
   type Animation {
     id: ID!
     title: String
     summary: String
     thumbnail: String
+    producer: [String]
+    screenplay: [String]
+    drawing: [String]
+    quarter: [String]
     likes: Int
     stars: Int
     recommend: Int
@@ -73,6 +67,8 @@ export const resolvers: IResolvers<any, ApolloContext> = {
       }
 
       const aniRepo = getRepository(Animation);
+      const broadRepo = getRepository(Broadcasting);
+
       const animation = new Animation();
       animation.fk_user_id = ctx.user_id;
       animation.title = args.title;
@@ -81,6 +77,7 @@ export const resolvers: IResolvers<any, ApolloContext> = {
       animation.is_adult = args.is_adult;
 
       await aniRepo.save(animation);
+
       const tagsData = await Promise.all(args.tags.map(Tag.findTag));
       const genresData = await Promise.all(args.genres.map(Genre.findGenre));
 
