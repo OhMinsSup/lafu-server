@@ -13,7 +13,7 @@ export const typeDef = gql`
 
 export const resolvers: IResolvers<any, ApolloContext> = {
   Query: {
-    hello: (parent: any, args: any, context: ApolloContext) => {
+    hello: (parent: any, args: any) => {
       return {
         result: `Hello ${args.name || 'World'}`
       };
