@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -8,11 +9,16 @@ import {
   ManyToOne,
   JoinColumn,
   JoinTable,
-  ManyToMany
+  ManyToMany,
+  OneToMany
 } from 'typeorm';
 import User from './User';
 import Tag from './Tag';
 import Genre from './Genre';
+import Quater from './Quater';
+import Medium from './Medium';
+import Old from './Old';
+import Broadcast from './Broadcast';
 
 @Entity('animations')
 class Animation {
@@ -38,14 +44,6 @@ class Animation {
   @Column({ array: true, type: 'varchar' })
   drawing!: string[];
 
-  // [2019_1, 2019_2, 2019_3, 2019_4]
-  @Index()
-  @Column({
-    length: 255,
-    nullable: false
-  })
-  quarter!: string;
-
   // 보고싶다
   @Column({ default: 0 })
   likes!: number;
@@ -65,6 +63,18 @@ class Animation {
   @Column('uuid')
   fk_user_id!: string;
 
+  @Column('uuid')
+  fk_quater_id!: string;
+
+  @Column('uuid')
+  fk_medium_id!: string;
+
+  @Column('uuid')
+  fk_old_id!: string;
+
+  @Column('uuid')
+  fk_broadcast_id!: string;
+
   @Column('timestampz')
   @CreateDateColumn()
   created_at!: Date;
@@ -73,11 +83,27 @@ class Animation {
   @UpdateDateColumn()
   updated_at!: Date;
 
-  @ManyToOne(type => User, { cascade: true, eager: true })
+  @ManyToOne(_type => Quater, { cascade: true, eager: true })
+  @JoinColumn({ name: 'fk_quater_id' })
+  quater!: Quater;
+
+  @ManyToOne(_type => Medium, { cascade: true, eager: true })
+  @JoinColumn({ name: 'fk_medium_id' })
+  medium!: Medium;
+
+  @ManyToOne(_type => Old, { cascade: true, eager: true })
+  @JoinColumn({ name: 'fk_old_id' })
+  old!: Old;
+
+  @ManyToOne(_type => Broadcast, { cascade: true, eager: true })
+  @JoinColumn({ name: 'fk_broadcast_id' })
+  broadcast!: Broadcast;
+
+  @ManyToOne(_type => User, { cascade: true, eager: true })
   @JoinColumn({ name: 'fk_user_id' })
   user!: User;
 
-  @ManyToMany(type => Tag)
+  @ManyToMany(_type => Tag)
   @JoinTable({
     name: 'anis_tags',
     joinColumn: {
@@ -89,7 +115,7 @@ class Animation {
   })
   tags!: Tag[];
 
-  @ManyToMany(type => Genre)
+  @ManyToMany(_type => Genre)
   @JoinTable({
     name: 'anis_genres',
     joinColumn: {
