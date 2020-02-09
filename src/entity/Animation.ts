@@ -9,16 +9,11 @@ import {
   ManyToOne,
   JoinColumn,
   JoinTable,
-  ManyToMany,
-  OneToMany
+  ManyToMany
 } from 'typeorm';
 import User from './User';
 import Tag from './Tag';
 import Genre from './Genre';
-import Quater from './Quater';
-import Medium from './Medium';
-import Old from './Old';
-import Broadcast from './Broadcast';
 
 @Entity('animations')
 class Animation {
@@ -63,18 +58,6 @@ class Animation {
   @Column('uuid')
   fk_user_id!: string;
 
-  @Column('uuid')
-  fk_quater_id!: string;
-
-  @Column('uuid')
-  fk_medium_id!: string;
-
-  @Column('uuid')
-  fk_old_id!: string;
-
-  @Column('uuid')
-  fk_broadcast_id!: string;
-
   @Column('timestampz')
   @CreateDateColumn()
   created_at!: Date;
@@ -82,22 +65,6 @@ class Animation {
   @Column('timestamptz')
   @UpdateDateColumn()
   updated_at!: Date;
-
-  @ManyToOne(_type => Quater, { cascade: true, eager: true })
-  @JoinColumn({ name: 'fk_quater_id' })
-  quater!: Quater;
-
-  @ManyToOne(_type => Medium, { cascade: true, eager: true })
-  @JoinColumn({ name: 'fk_medium_id' })
-  medium!: Medium;
-
-  @ManyToOne(_type => Old, { cascade: true, eager: true })
-  @JoinColumn({ name: 'fk_old_id' })
-  old!: Old;
-
-  @ManyToOne(_type => Broadcast, { cascade: true, eager: true })
-  @JoinColumn({ name: 'fk_broadcast_id' })
-  broadcast!: Broadcast;
 
   @ManyToOne(_type => User, { cascade: true, eager: true })
   @JoinColumn({ name: 'fk_user_id' })

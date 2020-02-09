@@ -9,9 +9,9 @@ import {
   JoinColumn,
   getRepository
 } from 'typeorm';
+import DataLoader from 'dataloader';
 import Genre from './Genre';
 import Animation from './Animation';
-import DataLoader = require('dataloader');
 import { groupById, normalize } from '../lib/utils';
 
 @Entity('anis_genres')

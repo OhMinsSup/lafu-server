@@ -2,7 +2,6 @@ import { createUserLoader } from '../entity/User';
 import { createUserProfileLoader } from '../entity/UserProfile';
 import { createTagsLoader } from '../entity/AnisTags';
 import { createGenresLoader } from '../entity/AnisGenre';
-import { createBroadcastingLoader } from '../entity/Broadcasting';
 import { createEpisodeLoader } from '../entity/Episode';
 
 function createLoaders() {
@@ -11,8 +10,7 @@ function createLoaders() {
     user: createUserLoader(),
     userProfile: createUserProfileLoader(),
     tags: createTagsLoader(),
-    genres: createGenresLoader(),
-    broadcastings: createBroadcastingLoader()
+    genres: createGenresLoader()
   };
 }
 

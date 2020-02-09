@@ -9,7 +9,6 @@ import AnisTags from '../entity/AnisTags';
 import AnisGenres from '../entity/AnisGenre';
 import Tag from '../entity/Tag';
 import Genre from '../entity/Genre';
-import Broadcasting from '../entity/Broadcasting';
 
 export const typeDef = gql`
   type Animation {
@@ -67,7 +66,6 @@ export const resolvers: IResolvers<any, ApolloContext> = {
       }
 
       const aniRepo = getRepository(Animation);
-      const broadRepo = getRepository(Broadcasting);
 
       const animation = new Animation();
       animation.fk_user_id = ctx.user_id;

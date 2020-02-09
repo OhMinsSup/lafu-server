@@ -1,24 +1,24 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Index,
+  UpdateDateColumn,
   Column,
-  ManyToOne,
-  JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  Index,
+  ManyToOne,
+  JoinColumn
 } from 'typeorm';
 import Animation from './Animation';
-import Broadcast from './Broadcast';
+import Quater from './Quater';
 
-@Entity('anis_broadcast')
-class AnisBroadcast {
+@Entity('anis_quater')
+class AnisQuater {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Index()
   @Column('uuid')
-  fk_broadcast_id!: string;
+  fk_quater_id!: string;
 
   @Index()
   @Column('uuid')
@@ -28,9 +28,9 @@ class AnisBroadcast {
   @JoinColumn({ name: 'fk_ani_id' })
   animation!: Animation;
 
-  @ManyToOne(type => Broadcast, broadcast => broadcast.id, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'fk_broadcast_id' })
-  broadcast!: Broadcast;
+  @ManyToOne(type => Quater, quater => quater.id, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'fk_quater_id' })
+  quater!: Quater;
 
   @Column('timestampz')
   @CreateDateColumn()
@@ -41,4 +41,4 @@ class AnisBroadcast {
   updated_at!: Date;
 }
 
-export default AnisBroadcast;
+export default AnisQuater;
