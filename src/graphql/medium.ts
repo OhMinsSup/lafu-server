@@ -4,10 +4,15 @@ import { ApolloContext } from '../app';
 import { BAD_REQUEST, ALREADY_EXIST, NOT_FOUND } from '../config/exection';
 import Medium, { MediumType } from '../entity/Medium';
 import AnisMedium from '../entity/AnisMedium';
-import { getRepository } from 'typeorm';
+import { getRepository, getManager } from 'typeorm';
 
 interface BaseMedium {
   medium: MediumType;
+}
+
+interface GetMediums {
+  cursor: string;
+  limit: number;
 }
 
 interface WriteMedium extends BaseMedium {}
@@ -34,6 +39,10 @@ export const typeDef = gql`
     updated_at: String
   }
 
+  extend type Query {
+    getMediums(cursor: ID, limit: Int): [Medium]
+  }
+
   extend type Mutation {
     removeMedium(mediumId: String): Response!
     writeMedium(medium: MediumEnum!): Medium!
@@ -46,6 +55,41 @@ export const resolvers: IResolvers<any, ApolloContext> = {
     TVA: 'TVA',
     OVA: 'OVA',
     MOVIE: 'MOVIE'
+  },
+  Query: {
+    getMediums: async (_, args: GetMediums) => {
+      if (args.limit > 100) {
+        throw new ApolloError('Max limit is 100', BAD_REQUEST.name);
+      }
+
+      const query = getManager()
+        .createQueryBuilder(Medium, 'mediums')
+        .limit(args.limit)
+        .orderBy('mediums.created_at', 'DESC')
+        .addOrderBy('mediums.id', 'DESC');
+
+      // pagination
+      if (args.cursor) {
+        const medium = await getRepository(Medium).findOne({
+          id: args.cursor
+        });
+        if (!medium) {
+          throw new ApolloError('invalid cursor');
+        }
+
+        query.where('mediums.created_at < :date', {
+          date: medium.created_at,
+          id: medium.id
+        });
+        query.orWhere('mediums.created_at = :date AND mediums.id < :id', {
+          date: medium.created_at,
+          id: medium.id
+        });
+      }
+
+      const mediums = await query.getMany();
+      return mediums;
+    }
   },
   Mutation: {
     removeMedium: async (_, args: RemoveMedium, ctx) => {
