@@ -14,7 +14,9 @@ import Genre from './Genre';
 import Animation from './Animation';
 import { groupById, normalize } from '../lib/utils';
 
-@Entity('anis_genres')
+@Entity('anis_genres', {
+  synchronize: false
+})
 class AnisGenres {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -39,7 +41,7 @@ class AnisGenres {
   @JoinColumn({ name: 'fk_genre_id' })
   genre!: Genre;
 
-  @ManyToOne(type => Animation, { cascade: true, eager: true })
+  @ManyToOne(type => Animation, { cascade: true })
   @JoinColumn({ name: 'fk_ani_id' })
   animation!: Animation;
 

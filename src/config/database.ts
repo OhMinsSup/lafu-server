@@ -37,7 +37,6 @@ export default class Database {
       port: parseInt(process.env.TYPEORM_PORT || '5432', 10),
       synchronize: process.env.SYNCHRONIZE === 'true',
       logging: true
-      // appname: 'lafu-v1-server'
     };
 
     return createConnection(connectionOptions);
@@ -51,7 +50,9 @@ export default class Database {
         if (connection.isConnected) {
           await connection.close();
         }
-      } catch {}
+      } catch (e) {
+        throw e;
+      }
       return connection.connect();
     }
 

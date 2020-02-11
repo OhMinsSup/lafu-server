@@ -1,9 +1,7 @@
 import { gql, IResolvers, makeExecutableSchema } from 'apollo-server-express';
 import merge from 'lodash/merge';
 import * as hello from './hello';
-import * as tag from './tag';
-import * as genre from './genre';
-import * as animation from './animation';
+import * as medium from './medium';
 
 const typeDef = gql`
   scalar JSON
@@ -24,8 +22,8 @@ const resolvers: IResolvers = {
 };
 
 const schema = makeExecutableSchema({
-  typeDefs: [typeDef, hello.typeDef, animation.typeDef, tag.typeDef, genre.typeDef],
-  resolvers: merge(resolvers, hello.resolvers, animation.resolvers, tag.resolvers, genre.resolvers)
+  typeDefs: [typeDef, hello.typeDef, medium.typeDef],
+  resolvers: merge(resolvers, hello.resolvers, medium.resolvers)
 });
 
 export default schema;

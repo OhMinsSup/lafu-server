@@ -3,6 +3,7 @@ import { ApolloServer } from 'apollo-server-express';
 import helmet from 'helmet';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import compresion from 'compression';
 import cors, { CorsOptions } from 'cors';
 import createLoaders, { Loaders } from './lib/createLoader';
@@ -19,7 +20,7 @@ app.use(
   })
 );
 app.use(helmet());
-app.use(bodyParser.json());
+app.use(cookieParser());
 if (process.env.NODE_ENV === 'development') {
   app.use(logger('dev'));
 }
@@ -44,6 +45,7 @@ app.use((req, res, next) => {
   cors(corsOptions);
   return next();
 });
+app.use(bodyParser.json());
 app.use(consumeUser);
 app.use(routes);
 

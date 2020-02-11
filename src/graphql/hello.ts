@@ -2,6 +2,10 @@ import { gql, IResolvers } from 'apollo-server-express';
 import { ApolloContext } from '../app';
 
 export const typeDef = gql`
+  type Response {
+    result: Boolean!
+  }
+
   type HelloResponse {
     result: String
   }

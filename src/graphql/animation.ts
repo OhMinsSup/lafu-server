@@ -1,7 +1,6 @@
 import { gql, IResolvers, ApolloError, AuthenticationError } from 'apollo-server-express';
 import Joi from 'joi';
 import { ApolloContext } from '../app';
-import { WriteAnimationArgs } from '../models/animation';
 import { getRepository } from 'typeorm';
 import Animation from '../entity/Animation';
 import { BAD_REQUEST } from '../config/exection';
@@ -44,7 +43,7 @@ export const typeDef = gql`
 
 export const resolvers: IResolvers<any, ApolloContext> = {
   Mutation: {
-    writeAnimation: async (_, args: WriteAnimationArgs, ctx) => {
+    writeAnimation: async (_, args: any, ctx) => {
       const schema = Joi.object().keys({
         title: Joi.string().required(),
         summary: Joi.string().required(),
@@ -76,8 +75,8 @@ export const resolvers: IResolvers<any, ApolloContext> = {
 
       await aniRepo.save(animation);
 
-      const tagsData = await Promise.all(args.tags.map(Tag.findTag));
-      const genresData = await Promise.all(args.genres.map(Genre.findGenre));
+      const tagsData: any = await Promise.all(args.tags.map(Tag.findTag));
+      const genresData: any = await Promise.all(args.genres.map(Genre.findGenre));
 
       const syncTags = await AnisTags.syncAnimationTags(animation.id, tagsData);
       if (!syncTags) {

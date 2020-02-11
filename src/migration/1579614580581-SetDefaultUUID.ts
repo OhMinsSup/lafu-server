@@ -1,18 +1,25 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 const names = [
-  'verifications',
+  'admin_users',
+  'animations',
+  'anis_broadcast',
+  'anis_genres',
+  'anis_medium',
+  'anis_old',
+  'anis_quater',
+  'anis_tags',
+  'auth_tokens',
+  'broadcasts',
+  'files',
+  'genres',
+  'mediums',
+  'olds',
+  'quaters',
+  'tags',
   'users',
   'user_profiles',
-  'tags',
-  'producers',
-  'genres',
-  'broadcastings',
-  'anis_tags',
-  'anis_producers',
-  'anis_genres',
-  'anis_broadcastings',
-  'animations'
+  'verifications'
 ];
 
 export class SetDefaultUUID1579614580581 implements MigrationInterface {

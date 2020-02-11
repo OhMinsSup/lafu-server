@@ -14,7 +14,9 @@ import Animation from './Animation';
 import Tag from './Tag';
 import { groupById, normalize } from '../lib/utils';
 
-@Entity('anis_tags')
+@Entity('anis_tags', {
+  synchronize: false
+})
 class AnisTags {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -39,7 +41,7 @@ class AnisTags {
   @JoinColumn({ name: 'fk_tag_id' })
   tag!: Tag;
 
-  @ManyToOne(type => Animation, { cascade: true, eager: true })
+  @ManyToOne(type => Animation, { cascade: true })
   @JoinColumn({ name: 'fk_ani_id' })
   animation!: Animation;
 

@@ -1,7 +1,6 @@
 import { gql, IResolvers, ApolloError, AuthenticationError } from 'apollo-server-express';
 import Joi from 'joi';
 import { ApolloContext } from '../app';
-import { writeGenre, updateGenre, removeGenre } from '../models/genre';
 import { BAD_REQUEST } from '../config/exection';
 import Genre from '../entity/Genre';
 import { getRepository } from 'typeorm';
@@ -34,7 +33,7 @@ export const resolvers: IResolvers<any, ApolloContext> = {
     }
   },
   Mutation: {
-    writeGenre: async (_, args: writeGenre, ctx) => {
+    writeGenre: async (_, args: any, ctx) => {
       const schema = Joi.object().keys({
         genreName: Joi.string().required()
       });
@@ -51,7 +50,7 @@ export const resolvers: IResolvers<any, ApolloContext> = {
       const genre = await Genre.findOrCreate(args.genreName);
       return genre;
     },
-    updateGenre: async (_, args: updateGenre, ctx) => {
+    updateGenre: async (_, args: any, ctx) => {
       const schema = Joi.object().keys({
         genreId: Joi.string().required(),
         genreName: Joi.string().required()
@@ -82,7 +81,7 @@ export const resolvers: IResolvers<any, ApolloContext> = {
 
       return true;
     },
-    removeGenre: async (_, args: removeGenre, ctx) => {
+    removeGenre: async (_, args: any, ctx) => {
       const schema = Joi.object().keys({
         genreId: Joi.string().required()
       });

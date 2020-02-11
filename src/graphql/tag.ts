@@ -1,7 +1,6 @@
 import { gql, IResolvers, ApolloError, AuthenticationError } from 'apollo-server-express';
 import Joi from 'joi';
 import { ApolloContext } from '../app';
-import { writeTag, removeTag, updateTag } from '../models/tag';
 import { BAD_REQUEST } from '../config/exection';
 import Tag from '../entity/Tag';
 import { getRepository } from 'typeorm';
@@ -34,7 +33,7 @@ export const resolvers: IResolvers<any, ApolloContext> = {
     }
   },
   Mutation: {
-    writeTag: async (_, args: writeTag, ctx) => {
+    writeTag: async (_, args: any, ctx) => {
       const schema = Joi.object().keys({
         tagName: Joi.string().required()
       });
@@ -51,7 +50,7 @@ export const resolvers: IResolvers<any, ApolloContext> = {
       const tag = await Tag.findOrCreate(args.tagName);
       return tag;
     },
-    updateTag: async (_, args: updateTag, ctx) => {
+    updateTag: async (_, args: any, ctx) => {
       const schema = Joi.object().keys({
         tagId: Joi.string().required(),
         tagName: Joi.string().required()
@@ -85,7 +84,7 @@ export const resolvers: IResolvers<any, ApolloContext> = {
 
       return true;
     },
-    removeTag: async (_, args: removeTag, ctx) => {
+    removeTag: async (_, args: any, ctx) => {
       if (!ctx.user_id) {
         throw new AuthenticationError('Not Logged In');
       }
