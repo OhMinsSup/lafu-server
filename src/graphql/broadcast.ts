@@ -44,7 +44,7 @@ export const typeDef = gql`
   }
 
   extend type Mutation {
-    removBroadcast(broadcastId: String!): Response!
+    removeBroadcast(broadcastId: String!): Response!
     writeBroadcast(broadcast: BroadcastEnum!): Broadcast!
     updateBroadcast(broadcastId: String!, broadcast: BroadcastEnum!): Response!
   }
