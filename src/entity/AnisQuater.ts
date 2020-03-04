@@ -9,9 +9,9 @@ import {
   JoinColumn
 } from 'typeorm';
 import Animation from './Animation';
-import Quater from './Quater';
+import Quarter from './Quarter';
 
-@Entity('anis_quater')
+@Entity('anis_quarter')
 class AnisQuater {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -28,9 +28,9 @@ class AnisQuater {
   @JoinColumn({ name: 'fk_ani_id' })
   animation!: Animation;
 
-  @ManyToOne(type => Quater, quater => quater.id, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'fk_quater_id' })
-  quater!: Quater;
+  @ManyToOne(type => Quarter, quarter => quarter.id, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'fk_quarter_id' })
+  quarter!: Quarter;
 
   @Column('timestampz')
   @CreateDateColumn()

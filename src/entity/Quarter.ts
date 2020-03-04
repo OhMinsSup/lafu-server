@@ -7,8 +7,8 @@ import {
   UpdateDateColumn
 } from 'typeorm';
 
-@Entity('quaters')
-class Quater {
+@Entity('quarters')
+class Quarter {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
@@ -28,4 +28,4 @@ class Quater {
   updated_at!: Date;
 }
 
-export default Quater;
+export default Quarter;

@@ -3,6 +3,8 @@ import merge from 'lodash/merge';
 import * as hello from './hello';
 import * as medium from './medium';
 import * as broadcast from './broadcast';
+import * as old from './old';
+import * as quarter from './quarter';
 
 const typeDef = gql`
   scalar JSON
@@ -23,8 +25,22 @@ const resolvers: IResolvers = {
 };
 
 const schema = makeExecutableSchema({
-  typeDefs: [typeDef, hello.typeDef, medium.typeDef, broadcast.typeDef],
-  resolvers: merge(resolvers, hello.resolvers, medium.resolvers, broadcast.resolvers)
+  typeDefs: [
+    typeDef,
+    hello.typeDef,
+    medium.typeDef,
+    broadcast.typeDef,
+    old.typeDef,
+    quarter.typeDef
+  ],
+  resolvers: merge(
+    resolvers,
+    hello.resolvers,
+    medium.resolvers,
+    broadcast.resolvers,
+    old.resolvers,
+    quarter.resolvers
+  )
 });
 
 export default schema;

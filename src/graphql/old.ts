@@ -1,10 +1,10 @@
 import Joi from 'joi';
 import { gql, IResolvers, ApolloError } from 'apollo-server-express';
 import { getManager, getRepository } from 'typeorm';
-import { ApolloContext } from 'src/app';
-import { BAD_REQUEST, NOT_FOUND, ALREADY_EXIST } from 'src/config/exection';
-import Old from 'src/entity/Old';
-import AnisOld from 'src/entity/AnisOld';
+import { ApolloContext } from '../../src/app';
+import { BAD_REQUEST, NOT_FOUND, ALREADY_EXIST } from '../../src/config/exection';
+import Old from '../../src/entity/Old';
+import AnisOld from '../../src/entity/AnisOld';
 
 interface BaseOld {
   old: number;
@@ -70,7 +70,7 @@ export const resolvers: IResolvers<any, ApolloContext> = {
           date: old.created_at,
           id: old.id
         });
-        query.orWhere('olds.created_at = :date AND mediums.id < :id', {
+        query.orWhere('olds.created_at = :date AND olds.id < :id', {
           date: old.created_at,
           id: old.id
         });
@@ -135,7 +135,7 @@ export const resolvers: IResolvers<any, ApolloContext> = {
         });
 
         if (!exists) {
-          throw new ApolloError('Medium not found', NOT_FOUND.name);
+          throw new ApolloError('Old not found', NOT_FOUND.name);
         }
 
         await oldRepo
