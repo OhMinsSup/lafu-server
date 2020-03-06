@@ -2,11 +2,11 @@ import { createUserLoader } from '../entity/User';
 import { createUserProfileLoader } from '../entity/UserProfile';
 import { createTagsLoader } from '../entity/AnisTags';
 import { createGenresLoader } from '../entity/AnisGenre';
-import { createEpisodeLoader } from '../entity/Episode';
+import { createEpisodesLoader } from '../entity/AnisEpisodes';
 
 function createLoaders() {
   return {
-    episode: createEpisodeLoader(),
+    episodes: createEpisodesLoader(),
     user: createUserLoader(),
     userProfile: createUserProfileLoader(),
     tags: createTagsLoader(),

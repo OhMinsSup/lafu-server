@@ -175,12 +175,14 @@ file.post('/create-url', async (req, res) => {
     if (resource_type === 'image') {
       const { original_filename } = response;
       return res.status(200).json({
+        fileId: file.id,
         filename: original_filename,
         signed_url: response.secure_url
       });
     } else {
       const { duration } = response;
       return res.status(200).json({
+        fileId: file.id,
         duration,
         signed_url: response.secure_url
       });

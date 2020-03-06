@@ -4,12 +4,9 @@ import {
   Column,
   UpdateDateColumn,
   CreateDateColumn,
-  ManyToOne,
-  JoinColumn,
-  getRepository
+  getRepository,
+  Index
 } from 'typeorm';
-import DataLoader from 'dataloader';
-import Animation from './Animation';
 
 @Entity('episodes')
 class Episode {
@@ -43,6 +40,7 @@ class Episode {
   @Column({ type: 'int' })
   action_time!: number;
 
+  @Index()
   @Column({ type: 'int', default: 1 })
   episode_order!: number;
 
@@ -63,27 +61,15 @@ class Episode {
   @UpdateDateColumn()
   updated_at!: Date;
 
-  @ManyToOne(type => Animation, { cascade: true, eager: true })
-  @JoinColumn({ name: 'fk_ani_id' })
-  animation!: Animation;
+  static async findEpisode(id: string) {
+    const repo = getRepository(Episode);
+    const episode = (await repo.findOne({
+      where: {
+        id
+      }
+    })) as Episode;
+    return episode;
+  }
 }
 
-export const createEpisodeLoader = () =>
-  new DataLoader<string, Episode[]>(async animationIdxs => {
-    const repo = getRepository(Episode);
-    const episodes = await repo
-      .createQueryBuilder('episodes')
-      .where('fk_ani_id IN (:...animationIdxs)', { animationIdxs })
-      .getMany();
-
-    const EpisodeListMap: {
-      [key: string]: Episode[];
-    } = {};
-    animationIdxs.forEach(animationIdx => (EpisodeListMap[animationIdx] = []));
-    episodes.forEach(episode => {
-      EpisodeListMap[episode.fk_ani_id].push(episode);
-    });
-    const ordered = animationIdxs.map(animationIdx => EpisodeListMap[animationIdx]);
-    return ordered;
-  });
 export default Episode;

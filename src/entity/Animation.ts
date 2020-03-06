@@ -14,6 +14,9 @@ import {
 import User from './User';
 import Tag from './Tag';
 import Genre from './Genre';
+import Episode from './Episode';
+
+export type BroadcastType = 'OPEN' | 'CLOSE';
 
 @Entity('animations')
 class Animation {
@@ -30,14 +33,10 @@ class Animation {
   @Column({ length: 255, type: 'varchar' })
   thumbnail!: string;
 
-  @Column({ type: 'varchar' })
-  producer!: string[];
-
-  @Column({ type: 'varchar' })
-  screenplay!: string[];
-
-  @Column({ array: true, type: 'varchar' })
-  drawing!: string[];
+  // 방영중 | 완결
+  @Index()
+  @Column({ length: 255, enum: ['OPEN', 'CLOSE'] })
+  broadcast!: BroadcastType;
 
   // 보고싶다
   @Column({ default: 0 })
@@ -93,6 +92,18 @@ class Animation {
     }
   })
   genres!: Genre[];
+
+  @ManyToMany(_type => Episode)
+  @JoinTable({
+    name: 'anis_tags',
+    joinColumn: {
+      name: 'anis_episodes'
+    },
+    inverseJoinColumn: {
+      name: 'fk_episode_id'
+    }
+  })
+  episodes!: Episode[];
 }
 
 export default Animation;
