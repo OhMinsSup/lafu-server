@@ -1,4 +1,4 @@
-package carousel
+package mains
 
 import (
 	"github.com/labstack/echo/v4"
@@ -7,7 +7,7 @@ import (
 
 
 
-func ApplyRoutes(e *echo.Group) {
+func ApplyCarouselRoutes(e *echo.Group) {
 	carousel := e.Group("/carousel")
 
 	carousel.GET("/list", controller.CarouselListController)

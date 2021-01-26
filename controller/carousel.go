@@ -3,13 +3,23 @@ package controller
 import (
 	"github.com/labstack/echo/v4"
 	"lafu-server/lib"
-	"lafu-server/model"
 	"net/http"
 )
 
 func CarouselListController(ctx echo.Context) error {
-	carousels := []model.Carousel{
-		model.Carousel{
+	type Carousel struct {
+		ID         int64  `json:"id"`
+		WebImg     string `json:"web_img"`
+		MobileImg  string `json:"mobile_img"`
+		LogoImg    string `json:"logo_img"`
+		Content    string `json:"content"`
+		Label      string `json:"label"`
+		ButtonText string `json:"button_text"`
+		IsAdult    bool   `json:"is_adult"`
+	}
+
+	carousels := []Carousel{
+		Carousel{
 			ID:         76,
 			WebImg:     "https://image.laftel.net/carousel/carousel_hero_BangDream3rd_w.jpg",
 			MobileImg:  "https://image.laftel.net/carousel/carousel_mobile_BangDream3rd_w.jpg",
@@ -19,7 +29,7 @@ func CarouselListController(ctx echo.Context) error {
 			ButtonText: "보러가기",
 			IsAdult:    false,
 		},
-		model.Carousel{
+		Carousel{
 			ID:         33,
 			WebImg:     "https://image.laftel.net/carousel/carousel_hero_MDZS_Q_w.jpg",
 			MobileImg:  "https://image.laftel.net/carousel/carousel_hero_MDZS_Q_m.jpg",
@@ -29,7 +39,7 @@ func CarouselListController(ctx echo.Context) error {
 			ButtonText: "보러가기",
 			IsAdult:    false,
 		},
-		model.Carousel{
+		Carousel{
 			ID:         29,
 			WebImg:     "https://image.laftel.net/carousel/carousel_hero_WanganMidnight_w.jpg",
 			MobileImg:  "https://image.laftel.net/carousel/carousel_hero_WanganMidnight_m.jpg",
@@ -39,7 +49,7 @@ func CarouselListController(ctx echo.Context) error {
 			ButtonText: "보러가기",
 			IsAdult:    false,
 		},
-		model.Carousel{
+		Carousel{
 			ID:         56,
 			WebImg:     "https://image.laftel.net/carousel/carousel_hero_horimiya_w.jpg",
 			MobileImg:  "https://image.laftel.net/carousel/carousel_hero_horimiya_m.jpg",
@@ -49,7 +59,7 @@ func CarouselListController(ctx echo.Context) error {
 			ButtonText: "보러가기",
 			IsAdult:    false,
 		},
-		model.Carousel{
+		Carousel{
 			ID:         75,
 			WebImg:     "https://image.laftel.net/carousel/carousel_hero_jujutsuPART2_w.jpg",
 			MobileImg:  "https://image.laftel.net/carousel/carousel_hero_jujutsuPART2_m.jpg",
@@ -59,7 +69,7 @@ func CarouselListController(ctx echo.Context) error {
 			ButtonText: "보러가기",
 			IsAdult:    false,
 		},
-		model.Carousel{
+		Carousel{
 			ID:         71,
 			WebImg:     "https://image.laftel.net/carousel/carousel_hero_21jan_end_w.jpg",
 			MobileImg:  "https://image.laftel.net/carousel/carousel_hero_21jan_end_m.jpg",
@@ -69,7 +79,7 @@ func CarouselListController(ctx echo.Context) error {
 			ButtonText: "보러가기",
 			IsAdult:    false,
 		},
-		model.Carousel{
+		Carousel{
 			ID:         66,
 			WebImg:     "https://image.laftel.net/carousel/carousel_hero_kimetsu_w_edit.jpg",
 			MobileImg:  "https://image.laftel.net/carousel/carousel_hero_kimetsu_m.jpg",
